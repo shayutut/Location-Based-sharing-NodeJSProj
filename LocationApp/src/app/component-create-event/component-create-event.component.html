@@ -1,5 +1,5 @@
 <p>
-   {{ title }}
+    {{ title }}
 </p>
 
 <form action="http://localhost:3000/post" method="POST">
@@ -24,13 +24,9 @@
     </div>
     <button type="submit" (click)="creatEvent()" class="btn btn-success">Submit</button>
 </form>
+<app-component-events></app-component-events>
 <div *ngIf="events!=null">
     <div *ngFor="let item of events">
-        {{ item.date }}
-        {{ item.genre }}
-        {{ item.location }}
-        {{ item.title }}
-        {{ item.publisher }}
+        {{ item.date }} {{ item.genre }} {{ item.location }} {{ item.title }} {{ item.publisher }}
     </div>
 </div>
-<app-component-events></app-component-events>
