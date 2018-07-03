@@ -20,9 +20,7 @@ Mobile Chrome browser
 
 ## Features
 
-// * Publishing location based messages
 * Publishing location based events
-* Observing locations
 * Explore location based events
 * Explore events by your favorite ganers
 * Live Maps

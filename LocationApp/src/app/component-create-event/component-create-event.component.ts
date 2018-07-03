@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { EventModel } from '../../Models/event-model';
+import { HttpClient } from '@angular/common/http';
 
 @Component({
   selector: 'app-component-create-event',
@@ -8,14 +9,20 @@ import { EventModel } from '../../Models/event-model';
 })
 export class ComponentCreateEventComponent implements OnInit {
   title = 'Create Event';
-  eventModel: EventModel;
-  constructor() {
-    this.eventModel = new EventModel();
+  eventModel: EventModel = new EventModel(null);
+  public events: EventModel[];
+  constructor(private http:HttpClient) {
+    this.eventModel;
+    this.events = [];
   }
 
-   creatEvent() {
-     console.log(this.eventModel);
-   }
+  creatEvent() {
+    
+    this.events.push(new EventModel(this.eventModel));
+    this.http.get('localhost:3000').subscribe(data => {
+      console.log(data);
+    });
+  }
 
   ngOnInit() {
 
