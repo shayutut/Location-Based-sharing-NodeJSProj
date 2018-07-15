@@ -1,32 +1,35 @@
 <p>
     {{ title }}
 </p>
-
-<form action="http://localhost:3000/post" method="POST">
+<!-- action="http://localhost:3000/post" method="POST" -->
+<form (ngSubmit)="onCreatEvent(form)" [formGroup]="form">
     <div class="form-group">
         <label for="Title">Title</label>
-        <input type="text" [(ngModel)]="eventModel.title" name="title" class="form-control" required>
+        <input type="text" formControlName="title" class="form-control" required>
+    </div>
+
+    <div class="form-group">
+        <label for="Description">Description</label>
+        <input type="text" formControlName="description" class="form-control">
     </div>
 
     <div class="form-group">
         <label for="Genre">Genre</label>
-        <input type="text" [(ngModel)]="eventModel.genre" name="genre" class="form-control">
-    </div>
-
-    <div class="form-group">
-        <label for="Location">Location</label>
-        <input type="text" [(ngModel)]="eventModel.location" name="location" class="form-control">
+        <input type="text" formControlName="genre" class="form-control">
     </div>
 
     <div class="form-group">
         <label for="Date">Date</label>
-        <input type="date" [(ngModel)]="eventModel.date" name="date" class="form-control">
+        <input type="date" formControlName="date">
     </div>
-    <button type="submit" (click)="creatEvent()" class="btn btn-success">Submit</button>
+    <div class="form-group">
+        <button mat-button type="button" (click)="filepicker.click()" class="btn btn-success">Choose picture</button>
+        <input type="file" formControlName="file" #filepicker (change)="omImagePicked($event)" accept=".png,.jpg,.jpeg">
+    </div>
+    <div class="form-group" *ngIf="eventModel.image">
+        <img height="100" width="100" [src]="eventModel.image" [alt]="form.value.title">
+    </div>
+
+    <button type="submit" class="btn btn-success">Submit</button>
 </form>
-<app-component-events></app-component-events>
-<div *ngIf="events!=null">
-    <div *ngFor="let item of events">
-        {{ item.date }} {{ item.genre }} {{ item.location }} {{ item.title }} {{ item.publisher }}
-    </div>
-</div>
+<app-component-location (locationEvent)="reciveLocation($event)"></app-component-location>

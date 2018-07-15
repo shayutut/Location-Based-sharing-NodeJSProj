@@ -1,0 +1,24 @@
+
+<div class="container">
+  <nav class="navbar navbar-default">
+    <div class="navbar-header">
+      <a class="navbar-brand" routerLink="/"></a>
+    </div>
+    <ul class="nav navbar-nav navbar-right">
+      <li>
+        <div *ngIf="userProfile">{{userProfile.name}}</div>
+      </li>
+      <li>
+        <div *ngIf="authService.isLoggedIn" >
+          <img height='100px' width='100px' src={{userProfile.picture}}>
+        </div>
+      </li>
+      <li>
+        <a *ngIf="!authService.isLoggedIn" (click)="authService.login()">Log In</a>
+      </li>
+      <li>
+        <a (click)="authService.logout()" *ngIf="authService.isLoggedIn">Log Out</a>
+      </li>
+    </ul>
+  </nav>
+</div>

@@ -1,18 +1,40 @@
+<div>
+  <button type="button"(click)="findMe()"  class="btn btn-success">Find Me</button>
+</div>
+<div class="form-group">
+  <input placeholder="search for location" autocorrect="off" autocapitalize="off" spellcheck="off" type="text" class="form-control" #search [formControl]="searchControl">
+</div>
 <agm-map
  [latitude]="lat" [longitude]="lng" 
  (mapClick)="mapClicked($event)"
  [zoom]="zoom" 
  >
-<agm-marker  *ngFor="let m of markers; let i = index"
-(markerClick)="clickedMarker(m.label, i)"
+<agm-marker  *ngFor="let m of events; let i = index"
+(markerClick)="clickedMarker(m,i)"
 [latitude]="m.lat"
 [longitude]="m.lng"
 [label]="m.label"
 [markerDraggable]="m.draggable">
 
-<agm-info-window>
-    <strong>InfoWindow content</strong>
+<agm-info-window *ngIf="m" class>
+    <h2>{{m.event.title}}</h2>
+    <div>{{m.event.genre}}</div>
+    <div>{{m.event.date}}</div>
+    <div>{{m.event.publisher.name}}</div>
+    <div> 
+      <img height="100" width="100" [src]="m.event.image" [alt]="m.event.title">
+   </div>
+    <div>{{m.event.description}}</div>
+    
   </agm-info-window>
 
 </agm-marker>
+
+<agm-circle [latitude]="lat" [longitude]="lng" 
+      [radius]="radiusValue"
+      [fillColor]="'red'"
+      [circleDraggable]="true"
+      [editable]="true">
+  </agm-circle>
+
 </agm-map>

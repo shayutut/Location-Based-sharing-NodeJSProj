@@ -1,0 +1,8 @@
+<div class="slidecontainer">
+    <input (input)="changeRadius($event)" type="range" min="1" max="100000" value="5000" class="slider" id="myRange">
+    <p>Value:
+        <span >{{radius}}</span>
+    </p>
+</div>
+
+<app-component-location [radiusValue]="radius" [events]="allEvents"></app-component-location>
