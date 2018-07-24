@@ -4,7 +4,11 @@ import * as auth0 from 'auth0-js';
 import { environment } from './../../environments/environment';
 import { Router } from '@angular/router';
 import { BehaviorSubject } from 'rxjs';
-
+import { UserService } from '../user.service';
+import { Profile } from 'selenium-webdriver/firefox';
+// import { of } from 'rxjs';
+// import { timer } from 'rxjs';
+// import { map } from "rxjs/operators";
 (window as any).global = window;
 
 @Injectable()
@@ -19,16 +23,18 @@ export class AuthService {
     scope: environment.auth.scope
   });
   // Store authentication data
+  // timer = timer(2000,1000);
   expiresAt: number;
   userProfile: any;
   accessToken: string;
   authenticated: boolean;
+  // refreshSubscription: any;
 
   private subject = new BehaviorSubject<any>(this.userProfile);
 
-  // constructor(private router: Router) {
-  //   this.getAccessToken();
-  // }
+  constructor(private userService: UserService) {
+    // auth0.handleAuthentication();
+  }
 
   GetProfileObservable() {
     return this.subject.asObservable();
@@ -38,6 +44,40 @@ export class AuthService {
   //   if (this.userProfile)
   //     return this.userProfile;
   // }
+
+  //   public scheduleRenewal() {
+  //     if (!this.isLoggedIn()) { return; }
+  //     this.unscheduleRenewal();
+
+  //     const expiresAt = JSON.parse(window.localStorage.getItem('expires_at'));
+
+  //     const expiresIn$ = of(expiresAt).pipe(
+  //       map(
+  //         expiresAt => {
+  //           const now = Date.now();
+  //           // Use timer to track delay until expiration
+  //           // to run the refresh at the proper time
+  //           return timer(Math.max(1, expiresAt - now));
+  //         }
+  //       )
+  //     );
+  //  // Once the delay time from above is
+  //     // reached, get a new JWT and schedule
+  //     // additional refreshes
+  //     this.refreshSubscription = expiresIn$.subscribe(
+  //       () => {
+  //         this.getAccessToken();
+  //         this.scheduleRenewal();
+  //       }
+  //     );
+  //   }
+
+  // public unscheduleRenewal() {
+  //   if (this.refreshSubscription) {
+  //     this.refreshSubscription.unsubscribe();
+  //   }
+  // }
+
 
   login() {
     // Auth0 authorize request
@@ -81,22 +121,36 @@ export class AuthService {
     this.userProfile = profile;
     this.authenticated = true;
     this.subject.next(profile);
+    this.userService.FindUserByMail(profile);
+    localStorage.setItem('currentUser', JSON.stringify(profile));
+    // localStorage.setItem('expires_at',JSON.stringify(this.expiresAt));
+    // this.scheduleRenewal();
   }
 
   logout() {
+    // debugger;
+    localStorage.removeItem('currentUser');
+    // localStorage.removeItem('expires_at');
     // Log out of Auth0 session
     // Ensure that returnTo URL is specified in Auth0
     // Application settings for Allowed Logout URLs
+    this.expiresAt = 0;
     this.auth0.logout({
-      returnTo: 'http://localhost:4200',
+      returnTo: 'https://location-6e87e.firebaseapp.com',
       clientID: environment.auth.clientID
     });
-    this.subject.next();
+    this.subject.next(null);
+    // this.router.navigate(['/']);
   }
 
-  get isLoggedIn(): boolean {
+  isLoggedIn(): boolean {
     // Check if current date is before token
     // expiration and user is signed in locally
+    //|| localStorage.getItem('currentUser')
+    // if (Profile )
+    //   return true;
+    // else return false;
+    // return true;
     return Date.now() < this.expiresAt && this.authenticated;
   }
 

@@ -1,5 +1,5 @@
-import { Component, OnInit, OnDestroy } from '@angular/core';
-import { EventModel, location } from '../../Models/event-model';
+import { Component, OnInit, OnDestroy, Input, SimpleChanges, SimpleChange } from '@angular/core';
+import { EventModel, locationModel } from '../../Models/event-model';
 import { HttpClient, HttpHeaderResponse, HttpHeaders } from '@angular/common/http';
 import { filterQueryId } from '@angular/core/src/view/util';
 import { FormGroup, FormControl, Validators, FormBuilder, ReactiveFormsModule } from '@angular/forms';
@@ -14,12 +14,9 @@ import { Subscription } from 'rxjs';
   styleUrls: ['./component-create-event.component.css']
 })
 export class ComponentCreateEventComponent implements OnInit, OnDestroy {
-  ngOnDestroy(): void {
-    if (this.profileSubscription) { this.profileSubscription.unsubscribe(); }
-  }
-
+  @Input() updateEvent: EventModel;
   title = 'Create Event';
-  eventModel: EventModel = new EventModel(null);
+  public eventModel: EventModel = new EventModel(null);
   public events: EventModel[];
   form: FormGroup;
 
@@ -27,7 +24,8 @@ export class ComponentCreateEventComponent implements OnInit, OnDestroy {
   userProfile: any;
 
   constructor(public authService: AuthService, public eventsServiceService: EventsServiceService, public fb: FormBuilder) {
-    this.eventModel.location = new location;
+    this.eventModel.location = new locationModel;
+    this.eventModel.subscribers = [];
     this.events = [];
     this.form = new FormGroup({
       'title': new FormControl(null, { validators: [Validators.required, Validators.minLength(3)] }),
@@ -38,17 +36,33 @@ export class ComponentCreateEventComponent implements OnInit, OnDestroy {
     })
   }
   ngOnInit() {
-    this.profileSubscription = this.authService.GetProfileObservable()
+    if (this.updateEvent)
+      this.eventModel = this.updateEvent;
+      this.profileSubscription = this.authService.GetProfileObservable()
       .subscribe(profile => {
         if (profile) {
-          this.userProfile = profile;
           console.log(profile);
-        } else {
+          this.userProfile = profile;
+        } else if (localStorage.getItem('currentUser')) {
+          this.userProfile=JSON.parse(localStorage.getItem('currentUser'));
+          console.log(this.userProfile);
+        }
+        else {
           this.userProfile = null;
         }
       })
   }
+  ngOnChanges(changes: SimpleChanges) {
+    this.eventModel = changes.updateEvent.currentValue;
+    // const name: SimpleChange = changes.name;
+    // console.log('prev value: ', name.previousValue);
+    // console.log('got name: ', name.currentValue);
+    // this._name = name.currentValue.toUpperCase();
+  }
 
+  ngOnDestroy(): void {
+    if (this.profileSubscription) { this.profileSubscription.unsubscribe(); }
+  }
 
   reciveLocation(loc) {
     this.eventModel.location.lat = loc.lat;
@@ -60,12 +74,17 @@ export class ComponentCreateEventComponent implements OnInit, OnDestroy {
     this.eventModel.date = form.value.date;
     this.eventModel.genre = form.value.genre;
     this.eventModel.description = form.value.description;
-    this.eventModel.publisher = this.userProfile;
+    this.eventModel.publisher = { 'email': this.userProfile.email, 'name': this.userProfile.name };
     this.events.push(this.eventModel);
     console.log(this.eventModel);
-    // this.eventModel.image = null;
-    this.eventsServiceService.SendEvent(this.eventModel);
+    if (this.updateEvent) {
+      this.eventsServiceService.UpdateEvent(this.eventModel);
+    } else {
+      this.eventsServiceService.SendEvent(this.eventModel);
+    }
+    location.reload();
   }
+
 
   omImagePicked(event: Event) {
     const file = (event.target as HTMLInputElement).files[0];

@@ -1,5 +1,4 @@
 import { BrowserModule } from '@angular/platform-browser';
-import { NgModule } from '@angular/core';
 import { ReactiveFormsModule, FormsModule } from '@angular/forms';
 import { HttpClientModule } from '@angular/common/http';
 import { AuthService } from './auth/auth.service';
@@ -16,6 +15,8 @@ import { RouterModule } from '@angular/router';
 import { LogInComponent } from './log-in/log-in.component';
 import { AuthGuard } from './auth/auth.guard';
 import { AppRoutingModule } from './app-routing.module';
+import { NgModule, NO_ERRORS_SCHEMA } from '@angular/core';
+import { MDBBootstrapModule } from 'angular-bootstrap-md';
 
 @NgModule({
   declarations: [
@@ -24,10 +25,10 @@ import { AppRoutingModule } from './app-routing.module';
     ComponentLocationComponent,
     CallbackComponent,
     ShowEventsComponent,
-    LogInComponent,
-
+    LogInComponent
   ],
   imports: [
+    MDBBootstrapModule.forRoot(),
     BrowserModule,
     HttpClientModule,
     FormsModule,
@@ -46,6 +47,7 @@ import { AppRoutingModule } from './app-routing.module';
     // ]),
     AppRoutingModule
   ],
+  schemas: [ NO_ERRORS_SCHEMA ],
   providers: [AuthService],
   bootstrap: [AppComponent],
 })

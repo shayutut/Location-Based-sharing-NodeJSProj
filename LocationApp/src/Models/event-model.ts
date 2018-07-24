@@ -3,12 +3,13 @@ import { IUser } from './user-model';
 
 export class EventModel {
   title: string;
-  date?: Date;
+  date: Date;
   genre: string;
-  location?: location;
-  publisher?: any;
+  location: locationModel;
+  publisher: any;
   image?: string;
-  description?:string;
+  description?: string;
+  subscribers: { email: string, name: string }[];
 
   constructor(model: EventModel) {
     // this = new EventModel();
@@ -18,12 +19,11 @@ export class EventModel {
       this.date = model.date;
       this.publisher = model.publisher;
       this.genre = model.genre;
-      this.description=model.description;
+      this.description = model.description;
     }
 
   }
 }
-export class location
-  { lat: number; lng: number };
+export class locationModel { lat: number; lng: number };
 
 // let Ganers = ["Board Games", "Pocker", "Jam", "Rock Concert"];

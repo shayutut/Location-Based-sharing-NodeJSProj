@@ -16,15 +16,18 @@
 [label]="m.label"
 [markerDraggable]="m.draggable">
 
-<agm-info-window *ngIf="m" class>
+<agm-info-window *ngIf="m.event" class>
     <h2>{{m.event.title}}</h2>
-    <div>{{m.event.genre}}</div>
+    <div>genre: {{m.event.genre}}</div>
     <div>{{m.event.date}}</div>
-    <div>{{m.event.publisher.name}}</div>
+    <div>publisher: {{m.event.publisher.name}}</div>
     <div> 
       <img height="100" width="100" [src]="m.event.image" [alt]="m.event.title">
    </div>
-    <div>{{m.event.description}}</div>
+    <div>description: {{m.event.description}}</div>
+    <div>subscribers:</div>
+    <div *ngFor="let s of m.event.subscribers">{{s.name}}</div>
+    <button type="submit" (click)="subscribeToEvent(m)" ass="btn btn-success">Go!</button>
     
   </agm-info-window>
 
@@ -33,8 +36,8 @@
 <agm-circle [latitude]="lat" [longitude]="lng" 
       [radius]="radiusValue"
       [fillColor]="'red'"
-      [circleDraggable]="true"
-      [editable]="true">
+      [circleDraggable]="false"
+      [editable]="false">
   </agm-circle>
 
 </agm-map>

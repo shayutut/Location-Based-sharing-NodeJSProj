@@ -7,20 +7,26 @@ import { Subscription } from 'rxjs';
   templateUrl: './log-in.component.html',
   styleUrls: ['./log-in.component.css']
 })
-export class LogInComponent implements OnInit ,OnDestroy{
+export class LogInComponent implements OnInit, OnDestroy {
 
   profileSubscription: Subscription;
   userProfile: any;
 
-  constructor(public authService: AuthService) { }
+  constructor(public authService: AuthService) {
+
+  }
 
   ngOnInit() {
     this.profileSubscription = this.authService.GetProfileObservable()
       .subscribe(profile => {
         if (profile) {
-          this.userProfile = profile;
           console.log(profile);
-        } else {
+          this.userProfile = profile;
+        } else if (localStorage.getItem('currentUser')) {
+          this.userProfile=JSON.parse(localStorage.getItem('currentUser'));
+          console.log(this.userProfile);
+        }
+        else {
           this.userProfile = null;
         }
       })

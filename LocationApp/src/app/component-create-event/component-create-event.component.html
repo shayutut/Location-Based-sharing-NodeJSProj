@@ -2,34 +2,34 @@
     {{ title }}
 </p>
 <!-- action="http://localhost:3000/post" method="POST" -->
-<form (ngSubmit)="onCreatEvent(form)" [formGroup]="form">
-    <div class="form-group">
-        <label for="Title">Title</label>
-        <input type="text" formControlName="title" class="form-control" required>
-    </div>
-
-    <div class="form-group">
-        <label for="Description">Description</label>
-        <input type="text" formControlName="description" class="form-control">
-    </div>
-
-    <div class="form-group">
-        <label for="Genre">Genre</label>
-        <input type="text" formControlName="genre" class="form-control">
-    </div>
-
-    <div class="form-group">
-        <label for="Date">Date</label>
-        <input type="date" formControlName="date">
-    </div>
-    <div class="form-group">
-        <button mat-button type="button" (click)="filepicker.click()" class="btn btn-success">Choose picture</button>
-        <input type="file" formControlName="file" #filepicker (change)="omImagePicked($event)" accept=".png,.jpg,.jpeg">
-    </div>
-    <div class="form-group" *ngIf="eventModel.image">
-        <img height="100" width="100" [src]="eventModel.image" [alt]="form.value.title">
-    </div>
-
-    <button type="submit" class="btn btn-success">Submit</button>
-</form>
-<app-component-location (locationEvent)="reciveLocation($event)"></app-component-location>
+    <form (ngSubmit)="onCreatEvent(form)" [formGroup]="form">
+        <div class="form-group">
+            <label for="Title">Title</label>
+            <input type="text" formControlName="title" class="form-control" required value="{{eventModel.title}}" placeholder="{{eventModel.title}}">
+        </div>
+        
+        <div class="form-group">
+            <label for="Description">Description</label>
+            <input type="text" formControlName="description" class="form-control" value="{{eventModel.description}}" placeholder="{{eventModel.description}}">
+        </div>
+        
+        <div class="form-group">
+            <label for="Genre">Genre</label>
+            <input type="text" formControlName="genre" class="form-control" value="{{eventModel.genre}}" placeholder="{{eventModel.genre}}">
+        </div>
+        
+        <div class="form-group">
+            <label for="Date">Date</label>
+            <input type="date" formControlName="date" value="{{eventModel.date}}" placeholder="{{eventModel.date}}">
+        </div>
+        <div class="form-group">
+            <button mat-button type="button" (click)="filepicker.click()" class="btn btn-success">Choose picture</button>
+            <input type="file" formControlName="file" #filepicker (change)="omImagePicked($event)" accept=".png,.jpg,.jpeg">
+        </div>
+        <div class="form-group" *ngIf="eventModel.image">
+            <img height="100" width="100" [src]="eventModel.image" [alt]="form.value.title">
+        </div>
+        
+        <button type="submit" class="btn btn-success">Submit</button>
+    </form>
+    <app-component-location (locationEvent)="reciveLocation($event)"></app-component-location>

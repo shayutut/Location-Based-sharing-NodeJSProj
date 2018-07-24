@@ -10,33 +10,56 @@ export class EventsServiceService {
   constructor(private http: HttpClient) { }
 
   SendEvent(eventModel) {
-    //im not usinf the formdata yet...
-    // const eventData=new FormData();
-    // eventData.append("title",eventModel.title);
-    // eventData.append("date",eventModel.date);
-    // eventData.append("genre",eventModel.genre);
-    // eventData.append("location",eventModel.location);
-    // eventData.append("publisher",eventModel.publisher);
-    // eventData.append("image",eventModel.image);
-    // eventData.append("description",eventModel.description);
-
-    // let headers = new HttpHeaders();
-    // headers.set("Content-Type", "application/json");, { headers: headers }
-      this.http.post('http://localhost:3000/addEvent', eventModel).subscribe(res => {
+    this.http.post('http://localhost:3000/addEvent', eventModel).subscribe(res => {
       console.log(res);
     },
       err => {
-        console.log("Error occured-post-event");
+        console.log("Error occured-post-event " + err);
       });
   }
 
   GetAllEvents(): Promise<EventModel[]> {
-    return new Promise(res=>{
+    return new Promise(res => {
       this.http.get('http://localhost:3000/allEvents').subscribe(data => {
         console.log(data);
         res(data as EventModel[])
       });
     })
-    
+  }
+
+  subscribeToEvent(user, event) {
+    return new Promise(res => {
+      this.http.post('http://localhost:3000/subscribeToEvent', { 'user': user, 'event': event }).subscribe(data => {
+        console.log(data);
+        res(data)
+      });
+    })
+  }
+
+  GetEventsByUser(user): Promise<EventModel[]> {
+    return new Promise(res => {
+      this.http.post('http://localhost:3000/getEventsByUser', user).subscribe(data => {
+        console.log(data);
+        res(data as EventModel[])
+      });
+    })
+  }
+
+  DeleteEvent(event) {
+    return new Promise(res => {
+      this.http.post('http://localhost:3000/DeleteEvent', event).subscribe(data => {
+        console.log(data);
+        res(data);
+      });
+    })
+  }
+
+  UpdateEvent(event) {
+    return new Promise(res => {
+      this.http.post('http://localhost:3000/UpdateEvent', event).subscribe(data => {
+        console.log(data);
+        res(data);
+      });
+    })
   }
 }

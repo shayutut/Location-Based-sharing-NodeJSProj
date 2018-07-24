@@ -1,24 +1,36 @@
-
-<div class="container">
-  <nav class="navbar navbar-default">
+<!-- <nav class="navbar navbar-default">
+    <div class="navbar-header"> -->
+<nav class="navbar navbar-inverse">
+  <div class="container-fluid">
     <div class="navbar-header">
       <a class="navbar-brand" routerLink="/"></a>
     </div>
-    <ul class="nav navbar-nav navbar-right">
+    <ul class="nav navbar-nav" style="display: inline;">
       <li>
         <div *ngIf="userProfile">{{userProfile.name}}</div>
       </li>
       <li>
-        <div *ngIf="authService.isLoggedIn" >
-          <img height='100px' width='100px' src={{userProfile.picture}}>
+        <div *ngIf="userProfile">
+          <img class="pic" height='100px' width='100px' src={{userProfile.picture}}>
         </div>
       </li>
       <li>
-        <a *ngIf="!authService.isLoggedIn" (click)="authService.login()">Log In</a>
+        <a type="button" class="btn"  *ngIf="!userProfile" (click)="authService.login()">Log In</a>
       </li>
       <li>
-        <a (click)="authService.logout()" *ngIf="authService.isLoggedIn">Log Out</a>
+        <a type="button" class="btn"  (click)="authService.logout()" *ngIf="userProfile">Log Out</a>
+      </li>
+      <li>
+        <a type="button" class="btn" routerLink="creatEvent">creat Event</a>
+      </li>
+      <li>
+        <a type="button" class="btn"  routerLink="showEvents">Show Events</a>
       </li>
     </ul>
-  </nav>
+    <div class="container">
+    </div>
+  </div>
+</nav>
+<div class="container">
+  <router-outlet></router-outlet>
 </div>
