@@ -136,7 +136,7 @@ export class AuthService {
     // Application settings for Allowed Logout URLs
     this.expiresAt = 0;
     this.auth0.logout({
-      returnTo: 'https://location-6e87e.firebaseapp.com',
+      returnTo: 'http://localhost:4200',
       clientID: environment.auth.clientID
     });
     this.subject.next(null);

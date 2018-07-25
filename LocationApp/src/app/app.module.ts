@@ -17,6 +17,12 @@ import { AuthGuard } from './auth/auth.guard';
 import { AppRoutingModule } from './app-routing.module';
 import { NgModule, NO_ERRORS_SCHEMA } from '@angular/core';
 import { MDBBootstrapModule } from 'angular-bootstrap-md';
+import { AsyncPipe } from '@angular/common';
+import { MessagingService } from './shared/messaging.service';
+import { AngularFireDatabaseModule } from 'angularfire2/database';
+import { AngularFireAuthModule } from 'angularfire2/auth';
+import { AngularFireModule } from 'angularfire2';
+import { environment } from '../environments/environment';
 
 @NgModule({
   declarations: [
@@ -28,6 +34,8 @@ import { MDBBootstrapModule } from 'angular-bootstrap-md';
     LogInComponent
   ],
   imports: [
+    AngularFireModule.initializeApp(environment.firebase),
+
     MDBBootstrapModule.forRoot(),
     BrowserModule,
     HttpClientModule,
@@ -45,10 +53,13 @@ import { MDBBootstrapModule } from 'angular-bootstrap-md';
     //   //   ]
     //   // }
     // ]),
-    AppRoutingModule
+    AppRoutingModule,
+    AngularFireDatabaseModule,
+    AngularFireModule.initializeApp(environment.firebase),
+    AngularFireAuthModule,
   ],
   schemas: [ NO_ERRORS_SCHEMA ],
-  providers: [AuthService],
+  providers: [AuthService,MessagingService, AsyncPipe],
   bootstrap: [AppComponent],
 })
 export class AppModule { }

@@ -10,6 +10,14 @@ export const environment = {
     audience: 'http://localhost:3001', // e.g., http://localhost:3001
     redirect: 'http://localhost:4200/callback',
     scope: 'openid profile email'
+  },
+  firebase: {
+    apiKey: "AIzaSyCJRZOM7ahDCBOAgy68DGP6jPpTOAcqGD4",
+    authDomain: "message-location-app.firebaseapp.com",
+    databaseURL: "https://message-location-app.firebaseio.com",
+    projectId: "message-location-app",
+    storageBucket: "message-location-app.appspot.com",
+    messagingSenderId: "87178306618"
   }
 };
 
