@@ -17,6 +17,9 @@ import { AuthGuard } from './auth/auth.guard';
 import { AppRoutingModule } from './app-routing.module';
 import { NgModule, NO_ERRORS_SCHEMA } from '@angular/core';
 import { MDBBootstrapModule } from 'angular-bootstrap-md';
+import { ServiceWorkerModule } from '@angular/service-worker';
+import { environment } from '../environments/environment';
+import { NotificationService } from '../notification.service';
 
 @NgModule({
   declarations: [
@@ -45,10 +48,11 @@ import { MDBBootstrapModule } from 'angular-bootstrap-md';
     //   //   ]
     //   // }
     // ]),
-    AppRoutingModule
+    AppRoutingModule,
+    ServiceWorkerModule.register('/ngsw-worker.js', { enabled: environment.production }),
   ],
   schemas: [ NO_ERRORS_SCHEMA ],
-  providers: [AuthService],
+  providers: [AuthService,NotificationService],
   bootstrap: [AppComponent],
 })
 export class AppModule { }

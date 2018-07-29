@@ -15,12 +15,12 @@ import { Profile } from 'selenium-webdriver/firefox';
 export class AuthService {
   // Create Auth0 web auth instance
   auth0 = new auth0.WebAuth({
-    clientID: environment.auth.clientID,
-    domain: environment.auth.domain,
+    clientID: 'rMtV0gLFSniVEzEGdi1BMfAFaNjW11tR',
+    domain: 'shayutut.auth0.com',
     responseType: 'token',
-    redirectUri: environment.auth.redirect,
-    audience: environment.auth.audience,
-    scope: environment.auth.scope
+    redirectUri: 'https://location-6e87e.firebaseapp.com/callback',
+    audience: 'http://localhost:3001',
+    scope: 'openid profile email'
   });
   // Store authentication data
   // timer = timer(2000,1000);
@@ -93,7 +93,7 @@ export class AuthService {
       } else if (err) {
         console.error(`Error: ${err.error}`);
       }
-      // this.router.navigate(['/']);
+       //  this.router.navigate(['/']);
     });
   }
 
@@ -136,8 +136,8 @@ export class AuthService {
     // Application settings for Allowed Logout URLs
     this.expiresAt = 0;
     this.auth0.logout({
-      returnTo: 'https://location-6e87e.firebaseapp.com',
-      clientID: environment.auth.clientID
+      returnTo: 'https://location-6e87e.firebaseapp.com',   
+      clientID: 'rMtV0gLFSniVEzEGdi1BMfAFaNjW11tR'
     });
     this.subject.next(null);
     // this.router.navigate(['/']);

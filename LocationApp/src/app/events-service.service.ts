@@ -1,13 +1,14 @@
 import { Injectable } from '@angular/core';
 import { HttpHeaders, HttpClient } from '@angular/common/http';
 import { EventModel } from '../Models/event-model';
+import { NotificationService } from '../notification.service';
 
 @Injectable({
   providedIn: 'root'
 })
 export class EventsServiceService {
 
-  constructor(private http: HttpClient) { }
+  constructor(private http: HttpClient,private notificationservice:NotificationService) { }
 
   SendEvent(eventModel) {
     this.http.post('http://localhost:3000/addEvent', eventModel).subscribe(res => {
@@ -28,6 +29,7 @@ export class EventsServiceService {
   }
 
   subscribeToEvent(user, event) {
+    this.notificationservice.sendNewsletter();
     return new Promise(res => {
       this.http.post('http://localhost:3000/subscribeToEvent', { 'user': user, 'event': event }).subscribe(data => {
         console.log(data);
