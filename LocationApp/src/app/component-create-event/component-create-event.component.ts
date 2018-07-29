@@ -7,6 +7,7 @@ import { EventsServiceService } from '../events-service.service';
 import { AuthService } from '../auth/auth.service';
 import { AppModule } from '../app.module';
 import { Subscription } from 'rxjs';
+import { NotificationService } from '../../notification.service';
 
 @Component({
   selector: 'app-component-create-event',
@@ -23,7 +24,7 @@ export class ComponentCreateEventComponent implements OnInit, OnDestroy {
   profileSubscription: Subscription;
   userProfile: any;
 
-  constructor(public authService: AuthService, public eventsServiceService: EventsServiceService, public fb: FormBuilder) {
+  constructor(public authService: AuthService, public eventsServiceService: EventsServiceService, public fb: FormBuilder,private notificationservice:NotificationService) {
     this.eventModel.location = new locationModel;
     this.eventModel.subscribers = [];
     this.events = [];
@@ -51,29 +52,30 @@ export class ComponentCreateEventComponent implements OnInit, OnDestroy {
           this.userProfile = null;
         }
       })
-  }
-  ngOnChanges(changes: SimpleChanges) {
-    this.eventModel = changes.updateEvent.currentValue;
-    // const name: SimpleChange = changes.name;
-    // console.log('prev value: ', name.previousValue);
-    // console.log('got name: ', name.currentValue);
-    // this._name = name.currentValue.toUpperCase();
-  }
-
-  ngOnDestroy(): void {
-    if (this.profileSubscription) { this.profileSubscription.unsubscribe(); }
-  }
-
-  reciveLocation(loc) {
-    this.eventModel.location.lat = loc.lat;
-    this.eventModel.location.lng = loc.lng;
-  }
-
-  onCreatEvent(form) {
-    this.eventModel.title = form.value.title;
-    this.eventModel.date = form.value.date;
-    this.eventModel.genre = form.value.genre;
-    this.eventModel.description = form.value.description;
+    }
+    ngOnChanges(changes: SimpleChanges) {
+      this.eventModel = changes.updateEvent.currentValue;
+      // const name: SimpleChange = changes.name;
+      // console.log('prev value: ', name.previousValue);
+      // console.log('got name: ', name.currentValue);
+      // this._name = name.currentValue.toUpperCase();
+    }
+    
+    ngOnDestroy(): void {
+      if (this.profileSubscription) { this.profileSubscription.unsubscribe(); }
+    }
+    
+    reciveLocation(loc) {
+      this.eventModel.location.lat = loc.lat;
+      this.eventModel.location.lng = loc.lng;
+    }
+    
+    onCreatEvent(form) {
+      this.notificationservice.subscribeToNotifications();
+      this.eventModel.title = form.value.title;
+      this.eventModel.date = form.value.date;
+      this.eventModel.genre = form.value.genre;
+      this.eventModel.description = form.value.description;
     this.eventModel.publisher = { 'email': this.userProfile.email, 'name': this.userProfile.name };
     this.events.push(this.eventModel);
     console.log(this.eventModel);

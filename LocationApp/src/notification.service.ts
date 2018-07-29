@@ -33,20 +33,21 @@ export class NotificationService {
   }
 
 
-  sendNewsletter() {
+  sendNewsletter(user) {
 
 
     console.log("Sending Newsletter to all Subscribers ...");
 
-    this.send().subscribe();
+    this.send(user).subscribe();
   }
 
   addPushSubscriber(sub: any) {
     return this.http.post('http://localhost:3000/addPushSubscriber', sub);
   }
 
-  send() {
-    return this.http.post('http://localhost:3000/sendNewsletter', null);
+  send(user) {
+    console.log(user.name)
+    return this.http.post('http://localhost:3000/sendNewsletter', user);
   }
 
 }

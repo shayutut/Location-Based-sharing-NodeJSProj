@@ -31,7 +31,7 @@ export class ShowEventsComponent implements OnInit, OnDestroy {
   userProfile: any;
 
 
-  constructor(private radiusService:RadiusService, private authService: AuthService, private http: HttpClient,private notificationservice:NotificationService, private eventsServiceService: EventsServiceService) { }
+  constructor(private radiusService:RadiusService, private authService: AuthService, private http: HttpClient, private eventsServiceService: EventsServiceService) { }
 
   ngOnInit() {
     this.profileSubscription = this.authService.GetProfileObservable()
@@ -59,8 +59,6 @@ export class ShowEventsComponent implements OnInit, OnDestroy {
           this.myEvents = data;
         }
       })
-      debugger;
-      this.notificationservice.subscribeToNotifications();
   }
 
   ngOnDestroy(): void {

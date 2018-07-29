@@ -29,7 +29,7 @@ export class EventsServiceService {
   }
 
   subscribeToEvent(user, event) {
-    this.notificationservice.sendNewsletter();
+    this.notificationservice.sendNewsletter(user);
     return new Promise(res => {
       this.http.post('http://localhost:3000/subscribeToEvent', { 'user': user, 'event': event }).subscribe(data => {
         console.log(data);
