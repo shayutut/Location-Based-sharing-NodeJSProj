@@ -39,6 +39,84 @@ export class AuthService {
   GetProfileObservable() {
     return this.subject.asObservable();
   }
+  
+  
+  login() {
+    // Auth0 authorize request
+    this.auth0.authorize();
+  }
+  
+  handleLoginCallback() {
+    // When Auth0 hash parsed, get profile
+    this.auth0.parseHash((err, authResult) => {
+      if (authResult && authResult.accessToken) {
+        window.location.hash = '';
+        this.getUserInfo(authResult);
+      } else if (err) {
+        console.error(`Error: ${err.error}`);
+      }
+      //  this.router.navigate(['/']);
+    });
+  }
+  
+  getAccessToken() {
+    this.auth0.checkSession({}, (err, authResult) => {
+      if (authResult && authResult.accessToken) {
+        this.getUserInfo(authResult);
+      }
+    });
+  }
+  
+  getUserInfo(authResult) {
+    // Use access token to retrieve user's profile and set session
+    this.auth0.client.userInfo(authResult.accessToken, (err, profile) => {
+      if (profile) {
+        this._setSession(authResult, profile);
+      }
+    });
+  }
+  
+  private _setSession(authResult, profile) {
+    // Save authentication data and update login status subject
+    this.expiresAt = authResult.expiresIn * 1000 + Date.now();
+    this.accessToken = authResult.accessToken;
+    this.userProfile = profile;
+    this.authenticated = true;
+    this.subject.next(profile);
+    this.userService.FindUserByMail(profile);
+    localStorage.setItem('currentUser', JSON.stringify(profile));
+    // localStorage.setItem('expires_at',JSON.stringify(this.expiresAt));
+    // this.scheduleRenewal();
+  }
+  
+  logout() {
+    // debugger;
+    localStorage.removeItem('currentUser');
+    // localStorage.removeItem('expires_at');
+    // Log out of Auth0 session
+    // Ensure that returnTo URL is specified in Auth0
+    // Application settings for Allowed Logout URLs
+    this.expiresAt = 0;
+    this.auth0.logout({
+      returnTo: 'https://location-6e87e.firebaseapp.com',   
+      clientID: 'rMtV0gLFSniVEzEGdi1BMfAFaNjW11tR'
+    });
+    this.subject.next(null);
+    // this.router.navigate(['/']);
+  }
+  
+  isLoggedIn(): boolean {
+    // Check if current date is before token
+    // expiration and user is signed in locally
+    //|| localStorage.getItem('currentUser')
+    // if (Profile )
+    //   return true;
+    // else return false;
+    // return true;
+    return Date.now() < this.expiresAt && this.authenticated;
+  }
+  
+}
 
   // GetUserProfile() {
   //   if (this.userProfile)
@@ -77,81 +155,3 @@ export class AuthService {
   //     this.refreshSubscription.unsubscribe();
   //   }
   // }
-
-
-  login() {
-    // Auth0 authorize request
-    this.auth0.authorize();
-  }
-
-  handleLoginCallback() {
-    // When Auth0 hash parsed, get profile
-    this.auth0.parseHash((err, authResult) => {
-      if (authResult && authResult.accessToken) {
-        window.location.hash = '';
-        this.getUserInfo(authResult);
-      } else if (err) {
-        console.error(`Error: ${err.error}`);
-      }
-       //  this.router.navigate(['/']);
-    });
-  }
-
-  getAccessToken() {
-    this.auth0.checkSession({}, (err, authResult) => {
-      if (authResult && authResult.accessToken) {
-        this.getUserInfo(authResult);
-      }
-    });
-  }
-
-  getUserInfo(authResult) {
-    // Use access token to retrieve user's profile and set session
-    this.auth0.client.userInfo(authResult.accessToken, (err, profile) => {
-      if (profile) {
-        this._setSession(authResult, profile);
-      }
-    });
-  }
-
-  private _setSession(authResult, profile) {
-    // Save authentication data and update login status subject
-    this.expiresAt = authResult.expiresIn * 1000 + Date.now();
-    this.accessToken = authResult.accessToken;
-    this.userProfile = profile;
-    this.authenticated = true;
-    this.subject.next(profile);
-    this.userService.FindUserByMail(profile);
-    localStorage.setItem('currentUser', JSON.stringify(profile));
-    // localStorage.setItem('expires_at',JSON.stringify(this.expiresAt));
-    // this.scheduleRenewal();
-  }
-
-  logout() {
-    // debugger;
-    localStorage.removeItem('currentUser');
-    // localStorage.removeItem('expires_at');
-    // Log out of Auth0 session
-    // Ensure that returnTo URL is specified in Auth0
-    // Application settings for Allowed Logout URLs
-    this.expiresAt = 0;
-    this.auth0.logout({
-      returnTo: 'https://location-6e87e.firebaseapp.com',   
-      clientID: 'rMtV0gLFSniVEzEGdi1BMfAFaNjW11tR'
-    });
-    this.subject.next(null);
-    // this.router.navigate(['/']);
-  }
-
-  isLoggedIn(): boolean {
-    // Check if current date is before token
-    // expiration and user is signed in locally
-    //|| localStorage.getItem('currentUser')
-    // if (Profile )
-    //   return true;
-    // else return false;
-    // return true;
-    return Date.now() < this.expiresAt && this.authenticated;
-  }
-
-}

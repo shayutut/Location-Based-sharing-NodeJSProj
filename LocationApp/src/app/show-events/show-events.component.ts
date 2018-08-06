@@ -53,6 +53,7 @@ export class ShowEventsComponent implements OnInit, OnDestroy {
           this.allEvents = this.eventsToMarkers(data);
         }
       })
+      debugger;
     this.eventsServiceService.GetEventsByUser(this.userProfile)
       .then(data => {
         if (data) {
@@ -80,6 +81,7 @@ export class ShowEventsComponent implements OnInit, OnDestroy {
 
   subscribeToEvent(m) {
     this.eventsServiceService.subscribeToEvent(this.userProfile, m);
+    location.reload();
   }
   //ToDo extentions
   eventsToMarkers(data: EventModel[]): marker[] {
